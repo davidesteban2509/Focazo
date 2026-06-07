@@ -1,0 +1,21 @@
+FOCAZO — Sitio Web
+==================
+
+ARCHIVOS:
+  index.html    → Página principal (sube este)
+  .htaccess     → Configuración del servidor (sube este también)
+  img/          → Carpeta para fotos del equipo
+
+CÓMO SUBIR A HOSTINGER:
+  1. Entra al panel de Hostinger
+  2. Ve a Administrador de archivos → public_html
+  3. Sube index.html y .htaccess directamente ahí
+  4. Sube la carpeta img/ si tienes fotos del equipo
+
+PERSONALIZAR:
+  - WhatsApp: busca "wa.me/593000000000" y pon tu número real
+  - Email:    busca "hola@focazo.com" y pon tu email real
+  - Instagram: busca "@focazo.com" y pon tu usuario real
+
+LISTO. No requiere servidor Node, PHP ni base de datos.
+Todo es HTML puro — funciona en cualquier hosting.

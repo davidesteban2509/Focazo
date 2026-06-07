@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FOCAZO — Agencia de Marketing</title>
+<meta name="description" content="Contenido que la gente NO puede ignorar. Agencia de marketing en Ecuador."/>
+<style>
+/* ── RESET ───────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+
+/* ── TOKENS ──────────────────────────────────── */
+:root{
+  --bg:#080910;
+  --bg2:#0d0e1a;
+  --card:#131525;
+  --ink:#f0f0f8;
+  --soft:rgba(240,240,248,.65);
+  --mute:rgba(240,240,248,.3);
+  --green:#00f5a0;
+  --mag:#e040fb;
+  --blue:#3d9cff;
+  --gold:#ffd166;
+  --line:rgba(240,240,248,.07);
+  --ease:cubic-bezier(.16,1,.3,1);
+  --nav:72px;
+}
+
+/* ── BASE ────────────────────────────────────── */
+body{
+  font-family:system-ui,-apple-system,'Segoe UI',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  overflow-x:hidden;
+  line-height:1.6;
+}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* ── CURSOR ──────────────────────────────────── */
+#cur-dot,#cur-ring{
+  position:fixed;top:0;left:0;
+  pointer-events:none;z-index:9999;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  will-change:transform;
+  opacity:0;
+}
+#cur-dot{
+  width:8px;height:8px;
+  background:var(--green);
+  transition:opacity .3s;
+}
+#cur-ring{
+  width:36px;height:36px;
+  border:1.5px solid rgba(0,245,160,.6);
+  transition:width .25s var(--ease),height .25s var(--ease),
+             border-color .2s,opacity .3s;
+  background:transparent;
+}
+#cur-ring.big{width:52px;height:52px;border-color:var(--mag)}
+@media(hover:none){#cur-dot,#cur-ring{display:none}}
+
+/* ── BG GRADIENT ─────────────────────────────── */
+#bg-glow{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(circle 700px at var(--mx,30%) var(--my,40%),
+      rgba(0,245,160,.055) 0%,transparent 60%),
+    radial-gradient(circle 800px at calc(var(--mx,30%) + 20%) calc(var(--my,40%) - 15%),
+      rgba(224,64,251,.04) 0%,transparent 60%);
+  filter:blur(0px);
+}
+
+/* ── NAV ─────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  height:var(--nav);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(1.5rem,5vw,4rem);
+  background:transparent;
+  border-bottom:1px solid transparent;
+  transition:background .4s,border-color .4s,backdrop-filter .4s;
+}
+nav.scrolled{
+  background:rgba(8,9,16,.88);
+  backdrop-filter:blur(18px);
+  border-bottom-color:var(--line);
+}
+.logo{
+  font-family:'Courier New',monospace;
+  font-size:1.35rem;font-weight:700;
+  letter-spacing:.18em;color:var(--ink);
+}
+.logo b{color:var(--green)}
+.nav-ul{list-style:none;display:flex;gap:2.5rem;align-items:center}
+.nav-ul a{
+  font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--soft);transition:color .2s;position:relative;
+}
+.nav-ul a::after{
+  content:'';position:absolute;bottom:-4px;left:0;
+  width:0;height:1px;background:var(--green);
+  transition:width .3s var(--ease);
+}
+.nav-ul a:hover{color:var(--ink)}
+.nav-ul a:hover::after{width:100%}
+.nav-cta{
+  background:var(--green)!important;
+  color:#000!important;padding:.45rem 1.2rem;
+  border-radius:4px;font-weight:700;
+}
+.nav-cta:hover{background:#00d490!important}
+.nav-cta::after{display:none!important}
+.burger{
+  display:none;flex-direction:column;gap:5px;
+  background:none;border:none;cursor:pointer;padding:4px;
+}
+.burger span{display:block;width:22px;height:2px;background:var(--ink);border-radius:2px}
+.mob-menu{
+  display:none;position:fixed;inset:0;z-index:490;
+  background:rgba(8,9,16,.97);backdrop-filter:blur(20px);
+  flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;
+}
+.mob-menu.on{display:flex}
+.mob-menu a{font-size:2rem;font-weight:700;color:var(--soft);transition:color .2s}
+.mob-menu a:hover{color:var(--green)}
+.mob-close{
+  position:absolute;top:1.5rem;right:2rem;
+  background:none;border:none;color:var(--soft);
+  font-size:1.6rem;cursor:pointer;
+}
+
+/* ── SECTION WRAPPER ─────────────────────────── */
+.wrap{
+  position:relative;z-index:1;
+  padding:6rem clamp(1.5rem,5vw,4rem);
+}
+.wrap.dark{background:var(--bg2)}
+.wrap.dark2{background:rgba(13,14,26,.6)}
+
+/* ── EYEBROW ─────────────────────────────────── */
+.eye{
+  display:inline-block;
+  font-family:'Courier New',monospace;
+  font-size:.65rem;letter-spacing:.35em;text-transform:uppercase;
+  color:var(--green);margin-bottom:1rem;
+}
+
+/* ── HERO ────────────────────────────────────── */
+.hero{
+  position:relative;z-index:1;
+  min-height:100svh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  padding:calc(var(--nav) + 5rem) clamp(1.5rem,5vw,4rem) 6rem;
+  overflow:hidden;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Courier New',monospace;
+  font-size:.68rem;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--green);
+  border:1px solid rgba(0,245,160,.25);
+  padding:.4rem 1.1rem;border-radius:100px;
+  margin-bottom:2.5rem;
+}
+.hero-badge .dot{
+  width:6px;height:6px;background:var(--green);
+  border-radius:50%;animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.hero h1{
+  font-size:clamp(2.8rem,8.5vw,7.5rem);
+  font-weight:800;line-height:1.0;
+  letter-spacing:-.03em;margin-bottom:1.5rem;
+  color:var(--ink);
+}
+.hero h1 .grad{
+  background:linear-gradient(130deg,var(--green) 0%,var(--blue) 45%,var(--mag) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero h1 em{
+  font-style:italic;
+  color:var(--green);
+  -webkit-text-fill-color:var(--green);
+}
+.hero p{
+  font-size:clamp(1rem,2.3vw,1.2rem);
+  color:var(--soft);max-width:560px;
+  line-height:1.75;margin-bottom:3rem;
+}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-p{
+  background:var(--green);color:#000;
+  padding:.85rem 2.2rem;border-radius:6px;
+  font-weight:700;font-size:.88rem;
+  letter-spacing:.05em;text-transform:uppercase;
+  transition:background .2s,transform .2s,box-shadow .2s;
+}
+.btn-p:hover{
+  background:#00d490;transform:translateY(-2px);
+  box-shadow:0 0 28px rgba(0,245,160,.35);
+}
+.btn-g{
+  color:var(--ink);padding:.85rem 2.2rem;border-radius:6px;
+  font-weight:600;font-size:.88rem;
+  letter-spacing:.05em;text-transform:uppercase;
+  border:1px solid rgba(240,240,248,.15);
+  transition:border-color .2s,transform .2s;
+}
+.btn-g:hover{border-color:rgba(240,240,248,.4);transform:translateY(-2px)}
+.scroll-hint{
+  position:absolute;bottom:2rem;left:50%;
+  transform:translateX(-50%);
+  color:var(--mute);font-size:.65rem;
+  letter-spacing:.25em;text-transform:uppercase;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  animation:sh 2s ease-in-out infinite;
+}
+.scroll-hint::after{
+  content:'';width:1px;height:36px;
+  background:linear-gradient(180deg,var(--mute),transparent);
+}
+@keyframes sh{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ── STATS ───────────────────────────────────── */
+.stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:0;background:var(--bg2);
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  position:relative;z-index:1;
+}
+.stat{
+  padding:2.5rem 2rem;text-align:center;
+  border-right:1px solid var(--line);
+}
+.stat:last-child{border-right:none}
+.stat-n{
+  display:block;font-family:'Courier New',monospace;
+  font-size:clamp(2rem,4vw,2.8rem);font-weight:700;
+  color:var(--ink);line-height:1;
+}
+.stat-n em{color:var(--green);font-style:normal}
+.stat-l{
+  display:block;margin-top:.4rem;
+  font-size:.7rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--mute);
+}
+
+/* ── SECTION HEADERS ─────────────────────────── */
+.sec-h{margin-bottom:4rem}
+.sec-title{
+  font-size:clamp(1.9rem,4.5vw,3.2rem);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-.02em;margin-bottom:1rem;
+}
+.sec-sub{
+  font-size:1rem;color:var(--soft);
+  max-width:520px;line-height:1.75;
+}
+
+/* ── SERVICES ────────────────────────────────── */
+.svc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:1px;background:var(--line);
+  border:1px solid var(--line);
+}
+.svc-card{
+  background:var(--bg);padding:2.75rem 2.25rem;
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.svc-card::before{
+  content:'';position:absolute;top:0;left:0;
+  width:100%;height:3px;
+  background:linear-gradient(90deg,var(--green),transparent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s var(--ease);
+}
+.svc-card:hover::before{transform:scaleX(1)}
+.svc-card:hover{background:var(--card)}
+.svc-ico{font-size:2.25rem;margin-bottom:1.25rem;display:block}
+.svc-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.75rem}
+.svc-card p{font-size:.875rem;color:var(--soft);line-height:1.7}
+.svc-n{
+  position:absolute;bottom:1.5rem;right:1.75rem;
+  font-family:'Courier New',monospace;font-size:.6rem;
+  letter-spacing:.2em;color:var(--mute);
+}
+
+/* ── METHODOLOGY ─────────────────────────────── */
+.proc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:2.5rem;
+}
+.proc{transition:transform .3s}
+.proc:hover{transform:translateY(-4px)}
+.proc-num{
+  width:48px;height:48px;border-radius:50%;
+  border:2px solid var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Courier New',monospace;
+  font-weight:700;font-size:1rem;color:var(--green);
+  margin-bottom:1.25rem;
+  transition:background .3s,color .3s;
+}
+.proc:hover .proc-num{background:var(--green);color:#000}
+.proc h3{font-size:1rem;font-weight:700;margin-bottom:.75rem}
+.proc ul{list-style:none}
+.proc ul li{
+  font-size:.83rem;color:var(--soft);
+  padding:.3rem 0;border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:.5rem;
+}
+.proc ul li::before{content:'→';color:var(--green);font-size:.7rem;flex-shrink:0}
+
+/* ── PILLARS ─────────────────────────────────── */
+.pillars{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:1px;background:var(--line);border:1px solid var(--line);
+  margin-top:3.5rem;
+}
+.pil{
+  background:var(--bg);padding:2.75rem;
+  position:relative;overflow:hidden;
+  transition:background .3s;
+}
+.pil:hover{background:var(--card)}
+.pil::after{
+  content:attr(data-n);
+  position:absolute;bottom:-1.5rem;right:1rem;
+  font-family:'Courier New',monospace;
+  font-size:7rem;font-weight:700;
+  color:rgba(240,240,248,.03);line-height:1;pointer-events:none;
+}
+.pil-ico{
+  width:44px;height:44px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:1.25rem;
+}
+.pil:nth-child(1) .pil-ico{background:rgba(0,245,160,.1)}
+.pil:nth-child(2) .pil-ico{background:rgba(224,64,251,.1)}
+.pil:nth-child(3) .pil-ico{background:rgba(61,156,255,.1)}
+.pil:nth-child(4) .pil-ico{background:rgba(255,209,102,.1)}
+.pil h3{font-size:1.1rem;font-weight:700;margin-bottom:.65rem}
+.pil p{font-size:.875rem;color:var(--soft);line-height:1.7}
+.pil-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:1rem}
+.tag{
+  font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;
+  padding:.2rem .6rem;border-radius:100px;
+  border:1px solid var(--line);color:var(--mute);
+}
+
+/* ── TEAM ────────────────────────────────────── */
+.team-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:2rem;margin-top:3.5rem;
+}
+.tm{text-align:center}
+.tm-av{
+  width:100%;aspect-ratio:1;border-radius:12px;
+  background:var(--card);
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;margin-bottom:1rem;
+  border:1px solid var(--line);
+  transition:border-color .3s,transform .3s;
+}
+.tm:hover .tm-av{border-color:rgba(0,245,160,.25);transform:translateY(-3px)}
+.tm h4{font-size:.95rem;font-weight:700;margin-bottom:.2rem}
+.tm-role{
+  display:block;font-family:'Courier New',monospace;
+  font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--green);margin-bottom:.4rem;
+}
+.tm-desc{font-size:.8rem;color:var(--soft);line-height:1.5}
+.badge{
+  display:inline-block;margin-top:.5rem;
+  font-size:.65rem;padding:.18rem .55rem;
+  border-radius:100px;
+  background:rgba(0,245,160,.1);
+  color:var(--green);
+  border:1px solid rgba(0,245,160,.2);
+}
+
+/* ── TICKER ──────────────────────────────────── */
+.ticker-wrap{
+  overflow:hidden;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:1.5rem 0;margin-top:3rem;
+}
+.ticker{
+  display:flex;gap:3.5rem;white-space:nowrap;
+  animation:tick 28s linear infinite;
+}
+.ticker:hover{animation-play-state:paused}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tick-i{
+  font-family:'Courier New',monospace;font-size:.75rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--mute);flex-shrink:0;
+  transition:color .2s;
+}
+.tick-i.star{color:var(--green)}
+
+/* ── CASES ───────────────────────────────────── */
+.cases-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:1.5rem;margin-top:3rem;
+}
+.case{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:2.25rem;
+  transition:border-color .3s,transform .3s;
+}
+.case:hover{border-color:rgba(0,245,160,.2);transform:translateY(-3px)}
+.case-ind{
+  font-family:'Courier New',monospace;font-size:.62rem;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:.75rem;
+}
+.case h4{font-size:1.1rem;font-weight:700;margin-bottom:.4rem}
+.case p{font-size:.83rem;color:var(--soft);line-height:1.6}
+.case-n{
+  display:block;font-family:'Courier New',monospace;
+  font-size:1.9rem;font-weight:700;
+  color:var(--green);margin:1.25rem 0 .2rem;
+}
+.case-nl{font-size:.75rem;color:var(--mute)}
+.case-tag{
+  display:inline-block;margin-top:1.25rem;
+  font-size:.68rem;padding:.25rem .7rem;
+  border-radius:100px;border:1px solid var(--line);color:var(--mute);
+}
+
+/* ── PRICING ─────────────────────────────────── */
+.plans{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:1.5rem;margin-top:4rem;align-items:start;
+}
+.plan{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:12px;padding:2.5rem;
+  position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s;
+}
+.plan:hover{transform:translateY(-4px)}
+.plan.hot{
+  border-color:var(--green);
+  background:linear-gradient(160deg,rgba(0,245,160,.06),var(--card));
+}
+.plan.hot::before{
+  content:'RECOMENDADO';
+  position:absolute;top:1.2rem;right:-2rem;
+  background:var(--green);color:#000;
+  font-family:'Courier New',monospace;font-size:.58rem;
+  font-weight:700;letter-spacing:.12em;
+  padding:.3rem 2.75rem;
+  transform:rotate(45deg);transform-origin:center;
+}
+.plan-name{
+  font-family:'Courier New',monospace;font-size:.62rem;
+  letter-spacing:.3em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:.9rem;
+}
+.plan-p{
+  font-family:'Courier New',monospace;
+  font-size:clamp(2.2rem,5vw,3rem);
+  font-weight:700;color:var(--ink);line-height:1;
+  margin-bottom:.2rem;
+}
+.plan-p sub{font-size:1rem;font-weight:400;color:var(--mute);vertical-align:baseline}
+.plan-per{font-size:.78rem;color:var(--mute);margin-bottom:1.5rem}
+.plan-ct{
+  font-size:.88rem;color:var(--soft);font-weight:600;
+  padding:1rem 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  margin-bottom:1.5rem;
+}
+.plan-ul{list-style:none;margin-bottom:2rem}
+.plan-ul li{
+  font-size:.83rem;color:var(--soft);
+  padding:.4rem 0;border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:.55rem;
+}
+.plan-ul li::before{content:'✓';color:var(--green);font-size:.7rem;flex-shrink:0}
+.plan-btn{
+  display:block;width:100%;text-align:center;
+  padding:.85rem;border-radius:6px;
+  font-weight:700;font-size:.82rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  transition:all .2s;cursor:pointer;border:none;
+}
+.plan-btn.ghost{
+  border:1px solid var(--line);color:var(--soft);background:transparent;
+}
+.plan-btn.ghost:hover{border-color:rgba(240,240,248,.35);color:var(--ink)}
+.plan-btn.fill{background:var(--green);color:#000}
+.plan-btn.fill:hover{background:#00d490;box-shadow:0 0 22px rgba(0,245,160,.3)}
+
+/* ── CTA FINAL ───────────────────────────────── */
+.cta-sec{
+  padding:9rem clamp(1.5rem,5vw,4rem);
+  text-align:center;position:relative;z-index:1;overflow:hidden;
+}
+.cta-sec::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(circle 500px at 25% 50%,rgba(0,245,160,.06),transparent),
+    radial-gradient(circle 600px at 75% 50%,rgba(224,64,251,.05),transparent);
+  pointer-events:none;
+}
+.cta-sec .sec-title{font-size:clamp(2.2rem,5.5vw,4.5rem)}
+.cta-sec .sec-title em{font-style:italic;color:var(--green)}
+.cta-sec .sec-sub{margin:.75rem auto 2.5rem;text-align:center}
+.cta-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.contact-l{margin-top:2.5rem;font-size:.78rem;color:var(--mute);letter-spacing:.08em}
+.contact-l a{color:var(--green)}
+
+/* ── FOOTER ──────────────────────────────────── */
+footer{
+  background:var(--bg2);
+  border-top:1px solid var(--line);
+  padding:3.5rem clamp(1.5rem,5vw,4rem) 2rem;
+}
+.ft{
+  display:flex;justify-content:space-between;
+  gap:3rem;flex-wrap:wrap;margin-bottom:2.5rem;
+}
+.ft-brand .logo{font-size:1.4rem;display:inline-block;margin-bottom:.75rem}
+.ft-brand p{font-size:.83rem;color:var(--soft);max-width:260px;line-height:1.6}
+.ft-col h5{
+  font-family:'Courier New',monospace;font-size:.62rem;
+  letter-spacing:.3em;text-transform:uppercase;
+  color:var(--mute);margin-bottom:1.2rem;
+}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:.55rem}
+.ft-col a{font-size:.83rem;color:var(--soft);transition:color .2s}
+.ft-col a:hover{color:var(--green)}
+.ft-bot{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1rem;
+  padding-top:2rem;border-top:1px solid var(--line);
+}
+.ft-bot p{font-size:.72rem;color:var(--mute);letter-spacing:.06em}
+.soc{display:flex;gap:1.25rem}
+.soc a{
+  font-family:'Courier New',monospace;font-size:.62rem;
+  letter-spacing:.15em;text-transform:uppercase;
+  color:var(--mute);transition:color .2s;
+}
+.soc a:hover{color:var(--green)}
+
+/* ── REVEAL ANIMATIONS ───────────────────────── */
+.r{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .75s var(--ease),transform .75s var(--ease);
+}
+.r.on{opacity:1;transform:none}
+
+/* ── RESPONSIVE ──────────────────────────────── */
+@media(max-width:768px){
+  .nav-ul{display:none}
+  .burger{display:flex}
+  .pillars{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid var(--line)}
+  .stat:last-child{border-bottom:none}
+}
+@media(max-width:480px){
+  .hero h1{font-size:2.5rem}
+  .proc-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<!-- BG glow -->
+<div id="bg-glow"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="logo">F<b>O</b>CAZO</a>
+  <ul class="nav-ul">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#metodologia">Metodología</a></li>
+    <li><a href="#equipo">Equipo</a></li>
+    <li><a href="#marcas">Clientes</a></li>
+    <li><a href="#precios">Precios</a></li>
+    <li><a href="#contacto" class="nav-cta">Contáctanos</a></li>
+  </ul>
+  <button class="burger" id="burger" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mob">
+  <button class="mob-close" id="mob-close">✕</button>
+  <a href="#servicios">Servicios</a>
+  <a href="#metodologia">Metodología</a>
+  <a href="#equipo">Equipo</a>
+  <a href="#marcas">Clientes</a>
+  <a href="#precios">Precios</a>
+  <a href="#contacto">Contacto</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-badge"><span class="dot"></span> Agencia de Marketing · Ecuador</div>
+  <h1>
+    Contenido que<br>
+    la gente <span class="grad">NO puede</span><br>
+    <em>ignorar</em>
+  </h1>
+  <p>Creamos contenido orgánico que captura atención, conecta emocionalmente y genera resultados reales para tu marca en redes sociales.</p>
+  <div class="hero-btns">
+    <a href="#precios" class="btn-p">Ver planes</a>
+    <a href="#metodologia" class="btn-g">Cómo trabajamos</a>
+  </div>
+  <div class="scroll-hint" aria-hidden="true">Scroll</div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat r"><span class="stat-n"><em data-to="300">0</em>K+</span><span class="stat-l">Seguidores generados</span></div>
+  <div class="stat r"><span class="stat-n"><em data-to="12">0</em>+</span><span class="stat-l">Marcas activas</span></div>
+  <div class="stat r"><span class="stat-n"><em data-to="10">0</em>+</span><span class="stat-l">Años de experiencia</span></div>
+  <div class="stat r"><span class="stat-n"><em data-to="170">0</em>K</span><span class="stat-l">Seguidores en un cliente</span></div>
+</div>
+
+<!-- SERVICIOS -->
+<section class="wrap" id="servicios">
+  <div class="sec-h">
+    <span class="eye r">— Nuestros Servicios</span>
+    <h2 class="sec-title r">Servicio integral<br>para tu marca</h2>
+    <p class="sec-sub r">Todo lo que necesitas para dominar las redes sociales y hacer crecer tu negocio de forma orgánica y sostenida.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card r">
+      <span class="svc-ico">📱</span>
+      <h3>Gestión de Redes Sociales &amp; Branding Digital</h3>
+      <p>Administramos tu presencia digital con estrategia, consistencia y creatividad. Tu marca activa y creciendo todos los días.</p>
+      <span class="svc-n">01</span>
+    </div>
+    <div class="svc-card r">
+      <span class="svc-ico">🎬</span>
+      <h3>Creación de Contenido</h3>
+      <p>Producción audiovisual completa: guión, pre-producción, grabación, edición con efectos visuales e integración de IA.</p>
+      <span class="svc-n">02</span>
+    </div>
+    <div class="svc-card r">
+      <span class="svc-ico">📸</span>
+      <h3>Cobertura de Eventos</h3>
+      <p>Fotografía y video profesional para tus eventos. Capturamos los momentos que fortalecen tu marca y generan engagement real.</p>
+      <span class="svc-n">03</span>
+    </div>
+    <div class="svc-card r">
+      <span class="svc-ico">📣</span>
+      <h3>Estrategias de Marca &amp; Punto de Venta</h3>
+      <p>Construcción de marca, estrategia 4Ps, asesoría en punto de venta, generación de leads y activaciones.</p>
+      <span class="svc-n">04</span>
+    </div>
+  </div>
+</section>
+
+<!-- METODOLOGÍA -->
+<section class="wrap dark" id="metodologia">
+  <div class="sec-h">
+    <span class="eye r">— Metodología</span>
+    <h2 class="sec-title r">4 pasos probados</h2>
+    <p class="sec-sub r">Un proceso claro que transforma tu presencia digital de forma consistente y medible desde el primer mes.</p>
+  </div>
+  <div class="proc-grid">
+    <div class="proc r">
+      <div class="proc-num">01</div>
+      <h3>Investigación &amp; Estrategia</h3>
+      <ul>
+        <li>Análisis de marca, audiencia y competencia</li>
+        <li>Estrategia personalizada para tu negocio</li>
+        <li>Co-working para definición de objetivos</li>
+        <li>Definición de canales de comunicación</li>
+      </ul>
+    </div>
+    <div class="proc r">
+      <div class="proc-num">02</div>
+      <h3>Creación de Contenido</h3>
+      <ul>
+        <li>Contenido visual y audiovisual de alto impacto</li>
+        <li>Relevancia + Consistencia + Alto valor</li>
+        <li>Experiencias e historias compartibles</li>
+        <li>Integración de IA y efectos visuales VFX</li>
+      </ul>
+    </div>
+    <div class="proc r">
+      <div class="proc-num">03</div>
+      <h3>Publicación &amp; Gestión</h3>
+      <ul>
+        <li>Gestión completa de publicaciones</li>
+        <li>Copies y hashtags estratégicos</li>
+        <li>Horarios optimizados para mayor alcance</li>
+        <li>Comunidad activa y monitoreada</li>
+      </ul>
+    </div>
+    <div class="proc r">
+      <div class="proc-num">04</div>
+      <h3>Medición &amp; Optimización</h3>
+      <ul>
+        <li>Analytics y estadísticas detalladas</li>
+        <li>Test A/B para mayor engagement</li>
+        <li>Reportes comparativos mensuales</li>
+        <li>Asesoría según objetivos definidos</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ESTRATEGIA -->
+<section class="wrap" id="estrategia">
+  <span class="eye r">— Estrategia de Contenido</span>
+  <h2 class="sec-title r">4 pilares que generan<br>resultados reales</h2>
+  <p class="sec-sub r">Cada publicación tiene un propósito. Combinamos los 4 tipos para construir un ecosistema que crece solo.</p>
+  <div class="pillars">
+    <div class="pil r" data-n="01">
+      <div class="pil-ico">ℹ️</div>
+      <h3>Informativo</h3>
+      <p>Genera valor real para tu audiencia mostrando el expertise de tu negocio. Construye autoridad y credibilidad en tu industria.</p>
+      <div class="pil-tags"><span class="tag">Valor</span><span class="tag">Autoridad</span><span class="tag">Giro del negocio</span></div>
+    </div>
+    <div class="pil r" data-n="02">
+      <div class="pil-ico">🔥</div>
+      <h3>Trend &amp; Humor</h3>
+      <p>Aprovechamos tendencias actuales para disparar el alcance. Contenido que genera shares masivos y conecta emocionalmente.</p>
+      <div class="pil-tags"><span class="tag">Viralidad</span><span class="tag">Alcance</span><span class="tag">Shares</span></div>
+    </div>
+    <div class="pil r" data-n="03">
+      <div class="pil-ico">💡</div>
+      <h3>Educativo</h3>
+      <p>Explica tu producto o servicio de forma que convierte. El cliente que entiende lo que ofreces es el cliente que compra.</p>
+      <div class="pil-tags"><span class="tag">Conversión</span><span class="tag">Producto</span><span class="tag">Servicio</span></div>
+    </div>
+    <div class="pil r" data-n="04">
+      <div class="pil-ico">💰</div>
+      <h3>Ventas</h3>
+      <p>Contenido directo que vende. Precios, promociones y lanzamientos presentados de manera atractiva que impulsa compras.</p>
+      <div class="pil-tags"><span class="tag">Precio</span><span class="tag">Promociones</span><span class="tag">Lanzamientos</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EQUIPO -->
+<section class="wrap dark" id="equipo">
+  <span class="eye r">— El Equipo</span>
+  <h2 class="sec-title r">Expertos en<br>viralidad orgánica</h2>
+  <p class="sec-sub r">Creadores, productores y estrategas que viven el contenido digital desde adentro.</p>
+  <div class="team-grid">
+    <div class="tm r">
+      <div class="tm-av">🎬</div>
+      <h4>Genaro Paredes</h4>
+      <span class="tm-role">Director Creativo</span>
+      <p class="tm-desc">Influencer &amp; creador de contenido con +10 años de experiencia.</p>
+      <span class="badge">+300K seguidores</span>
+    </div>
+    <div class="tm r">
+      <div class="tm-av">🎵</div>
+      <h4>Andrés Witt</h4>
+      <span class="tm-role">Productor Audio &amp; Video</span>
+      <p class="tm-desc">Músico y productor audiovisual especializado en contenido para redes.</p>
+      <span class="badge">TikTok 25K</span>
+    </div>
+    <div class="tm r">
+      <div class="tm-av">✨</div>
+      <h4>Luis Morillo</h4>
+      <span class="tm-role">Diseño &amp; VFX</span>
+      <p class="tm-desc">Especialista en efectos visuales e integración de IA para contenido de alto impacto.</p>
+      <span class="badge">TikTok 16K</span>
+    </div>
+    <div class="tm r">
+      <div class="tm-av">📷</div>
+      <h4>Bryan Martínez</h4>
+      <span class="tm-role">Fotografía &amp; Eventos</span>
+      <p class="tm-desc">Fotógrafo profesional especializado en cobertura de eventos y contenido de marca.</p>
+      <span class="badge">Fotografía Pro</span>
+    </div>
+    <div class="tm r">
+      <div class="tm-av">📊</div>
+      <h4>Erick Ocaña</h4>
+      <span class="tm-role">Marketing Digital</span>
+      <p class="tm-desc">Estrategias de pauta, venta online, generación de leads y activaciones de marca.</p>
+      <span class="badge">Performance</span>
+    </div>
+    <div class="tm r">
+      <div class="tm-av">🏆</div>
+      <h4>Lorena Delgado</h4>
+      <span class="tm-role">Trade Marketing</span>
+      <p class="tm-desc">+12 años en multinacionales de consumo masivo. Construcción de marca y estrategia 4Ps.</p>
+      <span class="badge">+12 años exp.</span>
+    </div>
+  </div>
+</section>
+
+<!-- MARCAS -->
+<section class="wrap" id="marcas">
+  <span class="eye r">— Casos de Éxito</span>
+  <h2 class="sec-title r">Marcas que creyeron<br>en nosotros</h2>
+  <p class="sec-sub r">Resultados reales en industrias diversas. Crecimiento orgánico medible mes a mes.</p>
+  <!-- Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span class="tick-i">Autocor</span><span class="tick-i star">★</span>
+      <span class="tick-i">AutoShow</span><span class="tick-i star">★</span>
+      <span class="tick-i">CNT</span><span class="tick-i star">★</span>
+      <span class="tick-i">Pacific Gym</span><span class="tick-i star">★</span>
+      <span class="tick-i">Monster Gym</span><span class="tick-i star">★</span>
+      <span class="tick-i">Grupo Mancheno</span><span class="tick-i star">★</span>
+      <span class="tick-i">Almacenes Anderson</span><span class="tick-i star">★</span>
+      <span class="tick-i">Atlantic Fitness</span><span class="tick-i star">★</span>
+      <span class="tick-i">Metrix Fitness</span><span class="tick-i star">★</span>
+      <span class="tick-i">Santé</span><span class="tick-i star">★</span>
+      <span class="tick-i">M-tabolic Pro</span><span class="tick-i star">★</span>
+      <span class="tick-i">Rights Chocolate</span><span class="tick-i star">★</span>
+      <span class="tick-i">Solaire</span><span class="tick-i star">★</span>
+      <span class="tick-i">Capilea</span><span class="tick-i star">★</span>
+      <!-- dupe for seamless loop -->
+      <span class="tick-i">Autocor</span><span class="tick-i star">★</span>
+      <span class="tick-i">AutoShow</span><span class="tick-i star">★</span>
+      <span class="tick-i">CNT</span><span class="tick-i star">★</span>
+      <span class="tick-i">Pacific Gym</span><span class="tick-i star">★</span>
+      <span class="tick-i">Monster Gym</span><span class="tick-i star">★</span>
+      <span class="tick-i">Grupo Mancheno</span><span class="tick-i star">★</span>
+      <span class="tick-i">Almacenes Anderson</span><span class="tick-i star">★</span>
+      <span class="tick-i">Atlantic Fitness</span><span class="tick-i star">★</span>
+      <span class="tick-i">Metrix Fitness</span><span class="tick-i star">★</span>
+      <span class="tick-i">Santé</span><span class="tick-i star">★</span>
+      <span class="tick-i">M-tabolic Pro</span><span class="tick-i star">★</span>
+      <span class="tick-i">Rights Chocolate</span><span class="tick-i star">★</span>
+      <span class="tick-i">Solaire</span><span class="tick-i star">★</span>
+      <span class="tick-i">Capilea</span><span class="tick-i star">★</span>
+    </div>
+  </div>
+  <!-- Cases -->
+  <div class="cases-grid">
+    <div class="case r">
+      <div class="case-ind">Automotriz</div>
+      <h4>Autocor</h4>
+      <p>Contenido orgánico TikTok con crecimiento sostenido y consistente.</p>
+      <span class="case-n">200 → 72K</span>
+      <span class="case-nl">seguidores con contenido orgánico</span>
+      <span class="case-tag">Contenido Orgánico TikTok</span>
+    </div>
+    <div class="case r">
+      <div class="case-ind">Automotriz</div>
+      <h4>AutoShow</h4>
+      <p>Uno de nuestros crecimientos más explosivos en poco tiempo.</p>
+      <span class="case-n">5K → 170K</span>
+      <span class="case-nl">seguidores en TikTok</span>
+      <span class="case-tag">Contenido Orgánico TikTok</span>
+    </div>
+    <div class="case r">
+      <div class="case-ind">Fitness &amp; Salud</div>
+      <h4>Pacific Gym</h4>
+      <p>Estrategia digital completa con generación de leads activa y continua.</p>
+      <span class="case-n">0 → 38K</span>
+      <span class="case-nl">seguidores desde cero</span>
+      <span class="case-tag">Estrategia Digital · Leads</span>
+    </div>
+    <div class="case r">
+      <div class="case-ind">Fitness &amp; Salud</div>
+      <h4>Monster Gym</h4>
+      <p>Comunidad construida desde cero con contenido de alto valor percibido.</p>
+      <span class="case-n">0 → 10K</span>
+      <span class="case-nl">seguidores en poco tiempo</span>
+      <span class="case-tag">Contenido Orgánico TikTok</span>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="wrap dark" id="precios">
+  <span class="eye r">— Nuestra Oferta</span>
+  <h2 class="sec-title r">Planes que se adaptan<br>a tu marca</h2>
+  <p class="sec-sub r">Precios en USD + IVA. Todos los planes incluyen contenido para Meta, Instagram y TikTok.</p>
+  <div class="plans">
+    <!-- BÁSICO -->
+    <div class="plan r">
+      <div class="plan-name">Básico</div>
+      <div class="plan-p">$350 <sub>USD</sub></div>
+      <div class="plan-per">+ IVA / mes</div>
+      <div class="plan-ct">10 contenidos al mes · Formato 9:16</div>
+      <ul class="plan-ul">
+        <li>Contenido orgánico</li>
+        <li>Grabación de videos</li>
+        <li>Edición de audio y efectos</li>
+        <li>Resumen de estadísticas</li>
+      </ul>
+      <a href="#contacto" class="plan-btn ghost">Empezar</a>
+    </div>
+    <!-- STANDAR -->
+    <div class="plan hot r">
+      <div class="plan-name">Standar</div>
+      <div class="plan-p">$550 <sub>USD</sub></div>
+      <div class="plan-per">+ IVA / mes</div>
+      <div class="plan-ct">14 contenidos al mes · Formato 9:16</div>
+      <ul class="plan-ul">
+        <li>Contenido orgánico</li>
+        <li>Grabación de videos guionados</li>
+        <li>Contenido con IA / VFX</li>
+        <li>Asesoría de pauta</li>
+        <li>Contenido para pauta</li>
+        <li>Estadísticas detalladas</li>
+        <li>Analytics comparativo desde mes 2</li>
+      </ul>
+      <a href="#contacto" class="plan-btn fill">Empezar</a>
+    </div>
+    <!-- PLUS -->
+    <div class="plan r">
+      <div class="plan-name">Plus</div>
+      <div class="plan-p">$750 <sub>USD</sub></div>
+      <div class="plan-per">+ IVA / mes</div>
+      <div class="plan-ct">18 contenidos al mes · Formato 9:16</div>
+      <ul class="plan-ul">
+        <li>Contenido orgánico + IA / VFX</li>
+        <li>Asesoría y contenido de pauta</li>
+        <li>Estadísticas detalladas</li>
+        <li>Analytics comparativo desde mes 2</li>
+        <li>Análisis completo de marca</li>
+        <li>Asesoría de portafolio y productos</li>
+        <li>Capacitación al personal</li>
+        <li>Estrategias de venta</li>
+        <li>Cobertura de eventos (1 por mes)</li>
+        <li>Backup 1 año de contenido</li>
+      </ul>
+      <a href="#contacto" class="plan-btn ghost">Empezar</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-sec" id="contacto">
+  <span class="eye r" style="display:block;text-align:center">— ¿Listo?</span>
+  <h2 class="sec-title r">Llevemos tu marca<br><em>a otro nivel</em></h2>
+  <p class="sec-sub r" style="text-align:center">Tu marca merece contenido que la gente no pueda ignorar. Hablemos y diseñemos juntos tu estrategia digital.</p>
+  <div class="cta-btns r">
+    <a href="https://wa.me/593000000000" class="btn-p" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+    <a href="mailto:hola@focazo.com" class="btn-g">Enviar un email</a>
+  </div>
+  <p class="contact-l r">También en <a href="https://instagram.com/focazo.com" target="_blank" rel="noopener">@focazo.com</a></p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div class="ft-brand">
+      <a href="#" class="logo">F<b>O</b>CAZO</a>
+      <p>Contenido que la gente NO puede ignorar. Agencia de marketing con foco en resultados orgánicos reales.</p>
+    </div>
+    <div class="ft-col">
+      <h5>Servicios</h5>
+      <ul>
+        <li><a href="#servicios">Gestión de Redes</a></li>
+        <li><a href="#servicios">Creación de Contenido</a></li>
+        <li><a href="#servicios">Cobertura de Eventos</a></li>
+        <li><a href="#servicios">Estrategias de Marca</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h5>Empresa</h5>
+      <ul>
+        <li><a href="#equipo">Equipo</a></li>
+        <li><a href="#marcas">Clientes</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <p>© 2026 FOCAZO Agencia de Marketing · Todos los derechos reservados</p>
+    <div class="soc">
+      <a href="https://instagram.com/focazo.com" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://tiktok.com/@focazo" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://focazo.com" target="_blank" rel="noopener">focazo.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+/* ── CURSOR (ultra fluido con lerp) ────────────── */
+var dot   = document.getElementById('cur-dot');
+var ring  = document.getElementById('cur-ring');
+var mx=window.innerWidth/2, my=window.innerHeight/2;
+var rx=mx, ry=my;
+var visible = false;
+
+function lerp(a,b,t){ return a + (b-a)*t; }
+
+window.addEventListener('mousemove', function(e){
+  mx = e.clientX; my = e.clientY;
+  if(!visible){
+    visible = true;
+    dot.style.opacity  = '1';
+    ring.style.opacity = '1';
+    rx = mx; ry = my;
+  }
+});
+document.addEventListener('mouseleave', function(){
+  dot.style.opacity = '0';
+  ring.style.opacity = '0';
+  visible = false;
+});
+document.addEventListener('mouseenter', function(){
+  if(visible){ dot.style.opacity='1'; ring.style.opacity='1'; }
+});
+
+// Hover enlarge
+document.querySelectorAll('a,button,.svc-card,.pil,.plan,.case,.tm').forEach(function(el){
+  el.addEventListener('mouseover',  function(e){ if(!el.contains(e.relatedTarget)) ring.classList.add('big'); });
+  el.addEventListener('mouseout',   function(e){ if(!el.contains(e.relatedTarget)) ring.classList.remove('big'); });
+});
+
+function animCursor(){
+  // dot follows instantly (just mouse position)
+  dot.style.left  = mx + 'px';
+  dot.style.top   = my + 'px';
+  // ring follows with smooth lerp
+  rx = lerp(rx, mx, 0.14);
+  ry = lerp(ry, my, 0.14);
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animCursor);
+}
+requestAnimationFrame(animCursor);
+
+/* ── MOUSE BG GLOW ─────────────────────────────── */
+var lastGlow=0;
+window.addEventListener('mousemove', function(e){
+  if(Date.now()-lastGlow < 40) return;
+  lastGlow = Date.now();
+  var x = (e.clientX/window.innerWidth*100).toFixed(1);
+  var y = (e.clientY/window.innerHeight*100).toFixed(1);
+  document.documentElement.style.setProperty('--mx', x+'%');
+  document.documentElement.style.setProperty('--my', y+'%');
+});
+
+/* ── NAV SCROLL ────────────────────────────────── */
+var nav = document.getElementById('nav');
+window.addEventListener('scroll', function(){
+  nav.classList.toggle('scrolled', window.scrollY > 30);
+}, {passive:true});
+
+/* ── MOBILE MENU ───────────────────────────────── */
+var burger   = document.getElementById('burger');
+var mob      = document.getElementById('mob');
+var mobClose = document.getElementById('mob-close');
+burger.addEventListener('click', function(){ mob.classList.add('on'); document.body.style.overflow='hidden'; });
+function closeMob(){ mob.classList.remove('on'); document.body.style.overflow=''; }
+mobClose.addEventListener('click', closeMob);
+mob.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeMob); });
+
+/* ── REVEAL ON SCROLL ──────────────────────────── */
+var reveals = Array.from(document.querySelectorAll('.r'));
+// stagger siblings
+var grids = ['.svc-grid','.proc-grid','.pillars','.team-grid','.cases-grid','.plans','.stats'];
+grids.forEach(function(sel){
+  var items = document.querySelectorAll(sel+' .r');
+  items.forEach(function(el,i){ el.style.transitionDelay = (i*0.08)+'s'; });
+});
+
+var obs = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(en.isIntersecting){
+      en.target.classList.add('on');
+      obs.unobserve(en.target);
+    }
+  });
+},{threshold:0.05, rootMargin:'0px 0px -30px 0px'});
+
+reveals.forEach(function(el){ obs.observe(el); });
+
+// Safety net: reveal all after 5s
+setTimeout(function(){
+  reveals.forEach(function(el){ el.classList.add('on'); });
+}, 5000);
+
+/* ── COUNT UP ──────────────────────────────────── */
+var counters = document.querySelectorAll('[data-to]');
+var cObs = new IntersectionObserver(function(entries){
+  entries.forEach(function(en){
+    if(!en.isIntersecting) return;
+    var el = en.target;
+    var target = +el.dataset.to;
+    cObs.unobserve(el);
+    var start = null, dur = 1600;
+    function step(ts){
+      if(!start) start = ts;
+      var p = Math.min((ts-start)/dur,1);
+      var ease = 1-Math.pow(1-p,3);
+      el.textContent = Math.round(ease*target);
+      if(p<1) requestAnimationFrame(step);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(step);
+  });
+},{threshold:0.4});
+counters.forEach(function(el){ cObs.observe(el); });
+
+/* ── SMOOTH ANCHORS ────────────────────────────── */
+document.addEventListener('click', function(e){
+  var a = e.target.closest('a[href^="#"]');
+  if(!a) return;
+  var id = a.getAttribute('href');
+  if(!id || id==='#') return;
+  var el = document.querySelector(id);
+  if(!el) return;
+  e.preventDefault();
+  window.scrollTo({top: el.getBoundingClientRect().top + window.scrollY - 72, behavior:'smooth'});
+});
+
+/* ── HERO TILT ─────────────────────────────────── */
+if(window.matchMedia('(hover:hover)').matches){
+  document.querySelectorAll('.plan,.case').forEach(function(card){
+    card.addEventListener('mousemove', function(e){
+      var r = card.getBoundingClientRect();
+      var x = (e.clientX-r.left)/r.width  - .5;
+      var y = (e.clientY-r.top) /r.height - .5;
+      card.style.transform = 'perspective(700px) rotateY('+(x*7)+'deg) rotateX('+(-y*7)+'deg) translateY(-4px)';
+    });
+    card.addEventListener('mouseleave', function(){
+      card.style.transform = '';
+    });
+  });
+}
+
+})();
+</script>
+</body>
+</html>
